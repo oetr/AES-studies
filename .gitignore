@@ -1,0 +1,15 @@
+*
+!.gitignore
+
+# documentation
+!*.org
+
+# Source code
+!*.vhd
+!Makefile
+
+# directories
+!*/
+
+# sim directory is auto-generated 
+src/sim
