@@ -13,8 +13,6 @@ use ieee.numeric_std.all;
 use work.txt_util.all;
 ------------------------------------------------------------
 package AESlib is
-
-
   subtype key_t is std_logic_vector(127 downto 0);
   subtype block_t is std_logic_vector(127 downto 0);
   subtype byte_t is unsigned(7 downto 0);
@@ -75,7 +73,7 @@ end AESlib;
 ------------------------------------------------------------
 package body AESlib is
 
-
+  -- convert given block into state
   function block2state (
     signal block_in : block_t)
     return state_t is
@@ -133,7 +131,7 @@ package body AESlib is
     return state_out;
   end function mix_columns;
 
-
+  -- mix one column
   function mix_one_column (
     constant column_in : column_t)
     return column_t is
