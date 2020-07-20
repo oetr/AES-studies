@@ -66,23 +66,23 @@ begin
 
   ----- Test vector generation -----------------------------
   TESTS : process is
-    
+
     function get_rand_bytes (
       constant n : natural)
       return std_logic_vector is
       variable data_out : std_logic_vector(n*8-1 downto 0);
-      variable byte : integer := 0;
-      
+      variable byte     : integer := 0;
+
     begin
       for i in 0 to n-1 loop
         uniform(seed1, seed2, rand);
-        byte := integer(rand*255.0);
+        byte                       := integer(rand*255.0);
         data_out(i*8+7 downto i*8) := std_logic_vector(to_unsigned(byte, 8));
       end loop;
 
       return data_out;
     end function get_rand_bytes;
-    
+
   begin
     print("");
     print("------------------------------------------------------------");
@@ -92,7 +92,8 @@ begin
     for i in 0 to 1000 loop
       wait until rising_edge(clk);
       if i = 0 then
-        input <= X"d4e0b81e27bfb44111985d52aef1e530";
+        input <= X"19a09ae93df4c6f8e3e28d48be2b2a08";
+      -- input <= X"d4e0b81e27bfb44111985d52aef1e530";
       else
         input <= get_rand_bytes(16);
       end if;

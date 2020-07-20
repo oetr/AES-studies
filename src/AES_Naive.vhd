@@ -22,16 +22,18 @@ entity AES_Naive is
 end entity AES_Naive;
 ------------------------------------------------------------
 architecture arch of AES_Naive is
-  signal pre_state : block_t;
-  signal state     : state_t;
+  signal pre_state : block_t := (others => '0');
+  signal state     : state_t := (others => (others => (others => '0')));
+  signal state_sb  : state_t;
   signal state_sr  : state_t;
   signal state_mc  : state_t;
 begin
-  process (input, key, pre_state, state, state_sr) is
+  process (input, key, pre_state, state, state_sb, state_sr) is
   begin
     pre_state <= input xor key;
     state     <= block2state(pre_state);
-    state_sr  <= shift_rows(state);
+    state_sb  <= subbytes(state);
+    state_sr  <= shift_rows(state_sb);
     state_mc  <= mix_columns(state_sr);
   end process;
 
