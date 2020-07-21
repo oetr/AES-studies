@@ -13,12 +13,15 @@ use ieee.numeric_std.all;
 use work.txt_util.all;
 ------------------------------------------------------------
 package AESlib is
-  subtype key_t is std_logic_vector(127 downto 0);
   subtype block_t is std_logic_vector(127 downto 0);
   subtype byte_t is unsigned(7 downto 0);
+  type word_t is array (0 to 3) of byte_t;
   type state_t is array (0 to 3, 0 to 3) of byte_t;
   type column_t is array (0 to 3) of byte_t;
   type column_array_t is array (0 to 3) of column_t;
+
+  subtype key_t is std_logic_vector(127 downto 0);
+  type key_state_t is array (0 to 3, 0 to 3) of byte_t;
 
   type sbox_t is array (0 to 255) of byte_t;
   constant sbox : sbox_t := (
@@ -39,12 +42,20 @@ package AESlib is
     x"e1", x"f8", x"98", x"11", x"69", x"d9", x"8e", x"94", x"9b", x"1e", x"87", x"e9", x"ce", x"55", x"28", x"df",
     x"8c", x"a1", x"89", x"0d", x"bf", x"e6", x"42", x"68", x"41", x"99", x"2d", x"0f", x"b0", x"54", x"bb", x"16");
 
+
+  type rcon_t is array (0 to 9) of byte_t;
+  constant RCON : rcon_t := (x"01", x"02", x"04", x"08", x"10", x"20", x"40", x"80", x"1B", x"36");
+
   ----------------------------------------------------------
   -- Functions
   ----------------------------------------------------------
   function block2state (
     signal block_in : block_t)
     return state_t;
+
+  function key2state (
+    signal key_in : key_t)
+    return key_state_t;
 
   -- Shift rows
   function shift_rows (
@@ -64,6 +75,30 @@ package AESlib is
   -- Subbytes
   function subbytes (
     signal state_in : state_t)
+    return state_t;
+
+  -- Key scheduler
+  function key_scheduler (
+    signal key    : key_state_t;
+    constant rc_i : byte_t)
+    return key_state_t;
+
+  -- Key scheduler: g function
+  function key_scheduler_g (
+    constant w3   : word_t;
+    constant rc_i : byte_t)
+    return word_t;
+
+
+  -- word xor
+  function word_xor (
+    constant w0 : word_t;
+    constant w1 : word_t)
+    return word_t;
+
+  function state_xor_key (
+    signal s : state_t;
+    signal k : key_state_t)
     return state_t;
 
 end AESlib;
@@ -87,6 +122,22 @@ package body AESlib is
 
     return state_out;
   end function block2state;
+
+
+  function key2state (
+    signal key_in : key_t)
+    return key_state_t is
+
+    variable state_out : key_state_t;
+  begin
+
+    for i in 0 to 15 loop
+      state_out(i mod 4, integer(i / 4)) := unsigned(key_in(127 - i*8 downto 127 - (i*8+7)));
+    end loop;
+
+
+    return state_out;
+  end function key2state;
 
 
   -- Shift rows
@@ -173,5 +224,92 @@ package body AESlib is
     end loop;
     return state_out;
   end function subbytes;
+
+
+  -- Key scheduler
+  function key_scheduler (
+    signal key    : key_state_t;
+    constant rc_i : byte_t)
+    return key_state_t is
+
+    variable w0, w1, w2, w3 : word_t;
+    variable w4, w5, w6, w7 : word_t;
+    variable key_out        : key_state_t;
+  begin
+    for col in 0 to 3 loop
+      
+      w0(col) := key(0, col);
+      w1(col) := key(1, col);
+      w2(col) := key(2, col);
+      w3(col) := key(3, col);
+      
+    end loop;
+
+    w4 := word_xor(key_scheduler_g(w3, rc_i), w0);
+    
+    w5 := word_xor(w4, w1);
+    w6 := word_xor(w5, w2);
+    w7 := word_xor(w6, w3);
+    
+
+    for col in 0 to 3 loop
+      
+      key_out(0, col) := w4(col);
+      key_out(1, col) := w5(col);
+      key_out(2, col) := w6(col);
+      key_out(3, col) := w7(col);
+    end loop;
+
+    return key_out;
+  end function key_scheduler;
+
+
+  -- Key scheduler: g function
+  function key_scheduler_g (
+    constant w3   : word_t;
+    constant rc_i : byte_t)
+    return word_t is
+
+    variable word_out : word_t;
+  begin
+    word_out(0) := rc_i xor sbox(to_integer(w3(1)));
+    word_out(1) := sbox(to_integer(w3(2)));
+    word_out(2) := sbox(to_integer(w3(3)));
+    word_out(3) := sbox(to_integer(w3(0)));
+    
+    return word_out;
+  end function key_scheduler_g;
+
+
+  function word_xor (
+    constant w0 : word_t;
+    constant w1 : word_t)
+    return word_t is
+
+    variable w_out : word_t;
+  begin
+    for i in 0 to 3 loop
+      w_out(i) := w0(i) xor w1(i);
+    end loop;
+
+    return w_out;
+  end function word_xor;
+
+
+  function state_xor_key (
+    signal s : state_t;
+    signal k : key_state_t)
+    return state_t is
+
+    variable s_out : state_t;
+  begin
+    for row in 0 to 3 loop
+      for col in 0 to 3 loop
+        s_out(row, col) := s(row, col) xor k(row, col);
+      end loop;
+    end loop;
+    return s_out;
+  end function state_xor_key;
+
 
 end package body AESlib;

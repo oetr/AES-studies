@@ -84,6 +84,8 @@ begin
     end function get_rand_bytes;
 
   begin
+    input <= (others => '0');
+    key <= (others => '0');
     print("");
     print("------------------------------------------------------------");
     print("--------------------- AES Testbench ------------------------");
@@ -92,7 +94,8 @@ begin
     for i in 0 to 1000 loop
       wait until rising_edge(clk);
       if i = 0 then
-        input <= X"19a09ae93df4c6f8e3e28d48be2b2a08";
+        input <= X"328831e0435a3137f6309807a88da234";
+        key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
       -- input <= X"d4e0b81e27bfb44111985d52aef1e530";
       else
         input <= get_rand_bytes(16);
