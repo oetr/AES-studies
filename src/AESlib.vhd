@@ -135,7 +135,6 @@ package body AESlib is
       state_out(i mod 4, integer(i / 4)) := unsigned(key_in(127 - i*8 downto 127 - (i*8+7)));
     end loop;
 
-
     return state_out;
   end function key2state;
 
@@ -153,6 +152,7 @@ package body AESlib is
         state_out(row, (col - row + 4) mod 4) := state_in(row, col);
       end loop;
     end loop;
+
     return state_out;
   end function shift_rows;
 
@@ -204,6 +204,7 @@ package body AESlib is
     column_out(1) := columnX2(1) xor column_in(0) xor column_in(3) xor columnX2(2) xor column_in(2);
     column_out(2) := columnX2(2) xor column_in(1) xor column_in(0) xor columnX2(3) xor column_in(3);
     column_out(3) := columnX2(3) xor column_in(2) xor column_in(1) xor columnX2(0) xor column_in(0);
+
     return column_out;
   end function mix_one_column;
 
@@ -222,6 +223,7 @@ package body AESlib is
         state_out(row, col) := sbox(index);
       end loop;
     end loop;
+
     return state_out;
   end function subbytes;
 
@@ -237,23 +239,22 @@ package body AESlib is
     variable key_out        : key_state_t;
   begin
     for col in 0 to 3 loop
-      
+
       w0(col) := key(0, col);
       w1(col) := key(1, col);
       w2(col) := key(2, col);
       w3(col) := key(3, col);
-      
+
     end loop;
 
     w4 := word_xor(key_scheduler_g(w3, rc_i), w0);
-    
+
     w5 := word_xor(w4, w1);
     w6 := word_xor(w5, w2);
     w7 := word_xor(w6, w3);
-    
+
 
     for col in 0 to 3 loop
-      
       key_out(0, col) := w4(col);
       key_out(1, col) := w5(col);
       key_out(2, col) := w6(col);
@@ -276,7 +277,7 @@ package body AESlib is
     word_out(1) := sbox(to_integer(w3(2)));
     word_out(2) := sbox(to_integer(w3(3)));
     word_out(3) := sbox(to_integer(w3(0)));
-    
+
     return word_out;
   end function key_scheduler_g;
 
@@ -308,6 +309,7 @@ package body AESlib is
         s_out(row, col) := s(row, col) xor k(row, col);
       end loop;
     end loop;
+
     return s_out;
   end function state_xor_key;
 
