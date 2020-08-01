@@ -53,49 +53,51 @@ package AESlib is
     signal block_in : block_t)
     return state_t;
 
+  ----------------------------------------------------------
   function key2state (
     signal key_in : key_t)
     return key_state_t;
 
-  -- Shift rows
+  ----------------------------------------------------------
   function shift_rows (
     signal state_in : state_t)
     return state_t;
 
-  -- Shift rows
+  ----------------------------------------------------------
   function mix_columns (
     signal state_in : state_t)
     return state_t;
 
-  -- Shift rows
+  ----------------------------------------------------------
   function mix_one_column (
     constant column_in : column_t)
     return column_t;
 
-  -- Subbytes
+  ----------------------------------------------------------
   function subbytes (
     signal state_in : state_t)
     return state_t;
-
-  -- Key scheduler
+  
+  ----------------------------------------------------------
   function key_scheduler (
     signal key    : key_state_t;
     constant rc_i : byte_t)
     return key_state_t;
 
-  -- Key scheduler: g function
+  ----------------------------------------------------------
   function key_scheduler_g (
     constant w3   : word_t;
     constant rc_i : byte_t)
     return word_t;
 
-
-  -- word xor
+  ----------------------------------------------------------
+  -- XOR two words
   function word_xor (
     constant w0 : word_t;
     constant w1 : word_t)
     return word_t;
 
+  ----------------------------------------------------------
   function state_xor_key (
     signal s : state_t;
     signal k : key_state_t)
@@ -123,7 +125,7 @@ package body AESlib is
     return state_out;
   end function block2state;
 
-
+  ----------------------------------------------------------
   function key2state (
     signal key_in : key_t)
     return key_state_t is
@@ -138,8 +140,7 @@ package body AESlib is
     return state_out;
   end function key2state;
 
-
-  -- Shift rows
+  ----------------------------------------------------------
   function shift_rows (
     signal state_in : state_t)
     return state_t is
@@ -156,8 +157,7 @@ package body AESlib is
     return state_out;
   end function shift_rows;
 
-
-  -- mix columns
+  ----------------------------------------------------------
   function mix_columns (
     signal state_in : state_t)
     return state_t is
@@ -182,7 +182,7 @@ package body AESlib is
     return state_out;
   end function mix_columns;
 
-  -- mix one column
+  ----------------------------------------------------------
   function mix_one_column (
     constant column_in : column_t)
     return column_t is
@@ -209,7 +209,7 @@ package body AESlib is
   end function mix_one_column;
 
 
-  -- Subbytes
+  ----------------------------------------------------------
   function subbytes (
     signal state_in : state_t)
     return state_t is
@@ -228,7 +228,7 @@ package body AESlib is
   end function subbytes;
 
 
-  -- Key scheduler
+  ----------------------------------------------------------
   function key_scheduler (
     signal key    : key_state_t;
     constant rc_i : byte_t)
@@ -265,7 +265,7 @@ package body AESlib is
   end function key_scheduler;
 
 
-  -- Key scheduler: g function
+  ----------------------------------------------------------
   function key_scheduler_g (
     constant w3   : word_t;
     constant rc_i : byte_t)
@@ -281,7 +281,7 @@ package body AESlib is
     return word_out;
   end function key_scheduler_g;
 
-
+  ----------------------------------------------------------
   function word_xor (
     constant w0 : word_t;
     constant w1 : word_t)
@@ -296,7 +296,7 @@ package body AESlib is
     return w_out;
   end function word_xor;
 
-
+  ----------------------------------------------------------
   function state_xor_key (
     signal s : state_t;
     signal k : key_state_t)
