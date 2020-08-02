@@ -25,10 +25,12 @@ architecture Testbench of AES_TB is
   signal rst : std_logic := '1';
 
   -- DUV: I/O
-  signal enc    : boolean := true;
-  signal key    : key_t   := (others => '0');
-  signal input  : block_t := (others => '0');
-  signal output : block_t := (others => '0');
+  signal input_valid : std_logic := '0';
+  signal done        : std_logic := '0';
+  signal enc         : boolean   := true;
+  signal key         : key_t     := (others => '0');
+  signal input       : block_t   := (others => '0');
+  signal output      : block_t   := (others => '0');
 
   -- random numbers
   shared variable seed1 : positive := 1000;
@@ -42,12 +44,14 @@ begin
   ---- Design Under Verification ---------------------------
   DUV : entity work.AES_Naive
     port map (
-      clk    => clk,
-      rst    => rst,
-      enc    => enc,
-      key    => key,
-      input  => input,
-      output => output
+      clk         => clk,
+      rst         => rst,
+      enc         => enc,
+      key         => key,
+      input       => input,
+      output      => output,
+      input_valid => input_valid,
+      done        => done
       );
 
   ---- DUT clock running forever ---------------------------
@@ -85,21 +89,29 @@ begin
 
   begin
     input <= (others => '0');
-    key <= (others => '0');
+    key   <= (others => '0');
     print("");
     print("------------------------------------------------------------");
     print("--------------------- AES Testbench ------------------------");
     print("------------------------------------------------------------");
 
+    wait until rising_edge(clk);
+
     for i in 0 to 1000 loop
-      wait until rising_edge(clk);
+      input_valid <= '1';
       if i = 0 then
         input <= X"328831e0435a3137f6309807a88da234";
         key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
       -- input <= X"d4e0b81e27bfb44111985d52aef1e530";
       else
-        input <= get_rand_bytes(16);
+        input <= X"328831e0435a3137f6309807a88da234";
+        key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
+        --key   <= get_rand_bytes(16);
+        --input <= get_rand_bytes(16);
       end if;
+      wait until rising_edge(clk);
+      input_valid <= '0';
+      wait until rising_edge(done);
     end loop;
 
     ENDSIM := true;

@@ -1,7 +1,6 @@
 ------------------------------------------------------------
--- Title      : AES Testbench
+-- Title      : AES Library
 ------------------------------------------------------------
--- File       : AES_TB
 -- Author     : Peter Samarin <peter.samarin@gmail.com>
 ------------------------------------------------------------
 -- Copyright (c) 2020 Peter Samarin
@@ -53,6 +52,10 @@ package AESlib is
     signal block_in : block_t)
     return state_t;
 
+  function state2block (
+    signal state_in : state_t)
+    return block_t;
+
   ----------------------------------------------------------
   function key2state (
     signal key_in : key_t)
@@ -77,7 +80,7 @@ package AESlib is
   function subbytes (
     signal state_in : state_t)
     return state_t;
-  
+
   ----------------------------------------------------------
   function key_scheduler (
     signal key    : key_state_t;
@@ -125,6 +128,21 @@ package body AESlib is
     return state_out;
   end function block2state;
 
+  -- convert given state into block
+  function state2block (
+    signal state_in : state_t)
+    return block_t is
+
+    variable block_out : block_t;
+  begin
+
+    for i in 0 to 15 loop
+      block_out(127 - i*8 downto 127 - (i*8+7)) := std_logic_vector(state_in(integer(i / 4), i mod 4));
+    end loop;
+
+    return block_out;
+  end function state2block;
+
   ----------------------------------------------------------
   function key2state (
     signal key_in : key_t)
@@ -167,6 +185,7 @@ package body AESlib is
     variable column_out : column_array_t;
   begin
 
+    -- extract columns from state
     for col in 0 to 3 loop
       for row in 0 to 3 loop
         column_in(col)(row) := state_in(row, col);
@@ -174,6 +193,7 @@ package body AESlib is
 
       column_out(col) := mix_one_column(column_in(col));
 
+      -- assemble the state from mixed columns
       for row in 0 to 3 loop
         state_out(row, col) := column_out(col)(row);
       end loop;
@@ -187,10 +207,11 @@ package body AESlib is
     constant column_in : column_t)
     return column_t is
 
-    variable columnX2   : column_t;
+    variable columnX2   : column_t;     -- times 2
     variable column_out : column_t;
     variable h          : byte_t := (others => '0');
   begin
+    -- times 2 computation
     for row in 0 to 3 loop
       if column_in(row)(7) = '1' then
         h := (others => '1');
@@ -306,7 +327,7 @@ package body AESlib is
   begin
     for row in 0 to 3 loop
       for col in 0 to 3 loop
-        s_out(row, col) := s(row, col) xor k(row, col);
+        s_out(row, col) := s(row, col) xor k(col, row);
       end loop;
     end loop;
 
