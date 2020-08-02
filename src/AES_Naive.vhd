@@ -39,7 +39,6 @@ architecture arch of AES_Naive is
   -- Round
   signal round    : integer range 0 to RCON'length - 1 := 0;
   signal done_reg : std_logic                          := '1';
-  signal busy     : boolean                            := false;
 
   signal output_reg : state_t := (others => (others => (others => '0')));
 
@@ -56,7 +55,6 @@ begin
       case state is
         when idle_s =>
           if input_valid = '1' then
-            busy      <= true;
             round     <= 1;
             round_key <= key_scheduler(initial_key, RCON(0));
             aes_state <= state_xor_key(initial_state, initial_key);
@@ -76,7 +74,6 @@ begin
         when final_round_s =>
           state      <= idle_s;
           done_reg   <= '1';
-          busy       <= false;
           output_reg <= state_xor_key(state_sr, round_key);
         when others => null;
       end case;
