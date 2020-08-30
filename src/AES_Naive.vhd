@@ -14,10 +14,10 @@ use work.AESlib.all;
 entity AES_Naive is
   port (
     clk         : in  std_logic;
-    -- I/O
+    -- management
     input_valid : in  std_logic;
     done        : out std_logic;
-    enc         : in  boolean;
+    -- data
     key         : in  key_t;
     input       : in  block_t;
     output      : out block_t);

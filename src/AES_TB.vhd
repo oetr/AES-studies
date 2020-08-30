@@ -26,7 +26,6 @@ architecture Testbench of AES_TB is
   -- DUV: I/O
   signal input_valid : std_logic := '0';
   signal done        : std_logic := '0';
-  signal enc         : boolean   := true;
   signal key         : key_t     := (others => '0');
   signal input       : block_t   := (others => '0');
   signal output      : block_t   := (others => '0');
@@ -44,7 +43,6 @@ begin
   DUV : entity work.AES_Naive
     port map (
       clk         => clk,
-      enc         => enc,
       key         => key,
       input       => input,
       output      => output,
