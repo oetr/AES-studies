@@ -22,7 +22,6 @@ end AES_TB;
 architecture Testbench of AES_TB is
   constant T : time      := 20 ns;      -- clk period
   signal clk : std_logic := '1';
-  signal rst : std_logic := '1';
 
   -- DUV: I/O
   signal input_valid : std_logic := '0';
@@ -45,7 +44,6 @@ begin
   DUV : entity work.AES_Naive
     port map (
       clk         => clk,
-      rst         => rst,
       enc         => enc,
       key         => key,
       input       => input,

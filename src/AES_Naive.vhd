@@ -14,7 +14,6 @@ use work.AESlib.all;
 entity AES_Naive is
   port (
     clk         : in  std_logic;
-    rst         : in  std_logic;
     -- I/O
     input_valid : in  std_logic;
     done        : out std_logic;
@@ -44,6 +43,21 @@ architecture arch of AES_Naive is
 
   type fsm_t is (idle_s, busy_s, final_round_s);
   signal state : fsm_t := idle_s;
+
+  -- convert given block into state
+  function block2state (
+    signal block_in : block_t)
+    return state_t is
+
+    variable state_out : state_t;
+  begin
+
+    for i in 0 to 15 loop
+      state_out(integer(i / 4), i mod 4) := unsigned(block_in(127 - i*8 downto 127 - (i*8+7)));
+    end loop;
+
+    return state_out;
+  end function block2state;
 
 begin
 
