@@ -40,7 +40,7 @@ architecture Testbench of AES_TB is
 begin
 
   ---- Design Under Verification ---------------------------
-  DUV : entity work.AES_Naive
+  DUV : entity work.AES_128_Simple_002
     port map (
       clk         => clk,
       key         => key,

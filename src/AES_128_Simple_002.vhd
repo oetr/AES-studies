@@ -1,7 +1,6 @@
 ------------------------------------------------------------
 -- Doc: A naive implementation of advanced encryption standard
 ------------------------------------------------------------
-------------------------------------------------------------
 -- Author    : Peter Samarin <peter.samarin@gmail.com>
 ------------------------------------------------------------
 -- Copyright (c) 2020 Peter Samarin
@@ -11,7 +10,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.AESlib.all;
 ------------------------------------------------------------
-entity AES_Naive is
+entity AES_128_Simple_002 is
   port (
     clk         : in  std_logic;
     -- management
@@ -21,9 +20,9 @@ entity AES_Naive is
     key         : in  key_t;
     input       : in  block_t;
     output      : out block_t);
-end entity AES_Naive;
+end entity AES_128_Simple_002;
 ------------------------------------------------------------
-architecture arch of AES_Naive is
+architecture arch of AES_128_Simple_002 is
   signal initial_state : state_t := (others => (others => (others => '0')));
   signal aes_state     : state_t := (others => (others => (others => '0')));
   signal state_xor     : state_t := (others => (others => (others => '0')));
