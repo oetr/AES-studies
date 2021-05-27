@@ -3,7 +3,7 @@
 ------------------------------------------------------------
 -- Author    : Peter Samarin <peter.samarin@gmail.com>
 ------------------------------------------------------------
--- Copyright (c) 2020 Peter Samarin
+-- Copyright (c) 2021 Peter Samarin
 ------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
