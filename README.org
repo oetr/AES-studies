@@ -24,6 +24,9 @@ make
 gtkwave sim/AES_TB.ghw
 #+end_src
 
+*OR* import the VHDL-files directly into your design.
+The testbench is compatible with ModelSim.
+
 * Inteface
 Almost every AES core has interface of the following form:
 #+begin_src vhdl
