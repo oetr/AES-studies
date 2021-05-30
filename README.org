@@ -1,25 +1,33 @@
 #+TITLE: AES in Hardware: N-Studies
 
 This is a series of studies of AES iplementations in VHDL.
-To build, I use =ghdl=. To view generated waveforms, I use gtkwave.
+The goal is to 
 
-For example, to build =001_AES_128_Simple=:
+* License
+This work is licensed under AGPL.
+Commercial license is available upon request.
+
+* Building
+If you want to use the provided makefiles, there are the following prerequisites: 
+- GHDL
+- GTKWave
+
+Use the following command to install those on Debian:
+#+begin_src bash
+$ apt install ghdl gtkwave
+#+end_src
+
+To build a core, (e.g. =001_AES_128_Simple=) use:
 #+begin_src bash
 cd 001_AES_128_Simple/
 make
 gtkwave sim/AES_TB.ghw
 #+end_src
 
-
-* 001_AES_128_Simple
-A straightforward implementation to the AES-128 encryption.
-To start an encryption, the core expects that the signals =done= and =input_valid= equal to 1, and that the signals =key= and =input= are valid.
-
-The core needs 11 clock cycles to perform an AES-128 encryption and sets a valid =output= and asserts =done= for one clock cycle.
-Once =done= is asserted, the core is ready to start another encryption.
-
+* Inteface
+Almost every AES core has interface of the following form:
 #+begin_src vhdl
-entity AES_128_Simple is
+entity AES__ is
   port (
     clk         : in  std_logic;
     -- management
@@ -29,5 +37,15 @@ entity AES_128_Simple is
     key         : in  std_logic_vector(127 downto 0);
     input       : in  std_logic_vector(127 downto 0);
     output      : out std_logic_vector(127 downto 0));
-end entity AES_128_Simple;
+end entity AES__;
 #+end_src
+
+To start an encryption, each core expects that the signals =done= and =input_valid= equal to 1, and that the signals =key= and =input= are valid.
+Once done, the core sets a valid =output= and asserts =done= for one clock cycle.
+Once =done= is asserted, the core is ready to start another encryption.
+
+* Short Core Description
+** 001_AES_128_Simple
+A straightforward implementation to the AES-128 encryption.
+This core needs 11 clock cycles to perform one AES-128 encryption.
+
