@@ -21,8 +21,8 @@ target: $(TARGET).vhd
 target_subdir: $(TARGET).vhd
 	$(GHDL) -i *.vhd
 	$(GHDL) make $(TARGET)
-#$(GHDL) -r  $(TARGET) --stop-delta=10 --wave=./$(TARGET).ghw
-	$(GHDL) -r  $(TARGET) --stop-delta=10 --vcd=./$(TARGET).vcd --disp-tree
+	$(GHDL) -r  $(TARGET) --stop-delta=10 --wave=./$(TARGET).ghw
+# $(GHDL) -r  $(TARGET) --stop-delta=10 --vcd=./$(TARGET).vcd
 
 .PHONY: clean
 clean:

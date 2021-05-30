@@ -14,4 +14,4 @@
 !*/
 
 # sim directory is auto-generated 
-src/sim
+sim/

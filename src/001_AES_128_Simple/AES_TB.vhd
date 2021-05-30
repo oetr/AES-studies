@@ -19,6 +19,8 @@ entity AES_TB is
 end AES_TB;
 ------------------------------------------------------------
 architecture Testbench of AES_TB is
+
+
   constant T : time      := 20 ns;      -- clk period
   signal clk : std_logic := '1';
 
@@ -36,6 +38,31 @@ architecture Testbench of AES_TB is
 
   -- simulation control
   shared variable ENDSIM : boolean := false;
+
+  -- test vector
+  type test_t is record
+    key    : std_logic_vector(127 downto 0);
+    input  : std_logic_vector(127 downto 0);
+    output : std_logic_vector(127 downto 0);
+  end record test_t;
+
+  type test_array_t is array (natural range <>) of test_t;
+  signal test_vector : test_array_t (0 to 2) :=(
+    -- test 1
+    (key    => X"2b7e151628aed2a6abf7158809cf4f3c",
+     input  => X"3243f6a8885a308d313198a2e0370734",
+     output => X"3925841d02dc09fbdc118597196a0b32"),
+    -- test 2
+    (key    => X"000102030405060708090a0b0c0d0e0f",
+     input  => X"00112233445566778899aabbccddeeff",
+     output => X"69c4e0d86a7b0430d8cdb78070b4c55a"),
+    -- test 3
+    (key    => X"000102030405060708090a0b0c0d0e0f",
+     input  => X"000102030405060708090a0b0c0d0e0f",
+     output => X"0a940bb5416ef045f1c39458c653ea5a")
+    );
+  signal test_nr : integer := 1;
+
 begin
 
   ---- Design Under Verification ---------------------------
@@ -92,23 +119,21 @@ begin
 
     wait until rising_edge(clk);
 
-    for i in 0 to 1000 loop
+    for i in test_vector'left to test_vector'right loop
       input_valid <= '1';
-      if i = 0 then
-        input <= X"328831e0435a3137f6309807a88da234";
-        key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
-      -- input <= X"d4e0b81e27bfb44111985d52aef1e530";
-      else
-        --input <= X"328831e0435a3137f6309807a88da234";
-        --key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
-      key   <= get_rand_bytes(16);
-      input <= get_rand_bytes(16);
-      end if;
+      input       <= test_vector(i).input;
+      key         <= test_vector(i).key;
       wait until rising_edge(clk);
       input_valid <= '0';
       wait until rising_edge(done);
+      if output /= test_vector(i).output then
+        print("Test " & str(test_nr) & " failed. key: " & hstr(key) & ", input: " & hstr(input));
+        print("     expected: " & hstr(test_vector(i).output) & ", got: " & hstr(output));
+      end if;
+      test_nr <= test_nr + 1;
     end loop;
 
+    wait until rising_edge(clk);
     ENDSIM := true;
     print("Simulation end...");
     print("");
