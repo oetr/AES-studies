@@ -10,7 +10,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.AESlib.all;
 ------------------------------------------------------------
-entity AES_128_Simple_002 is
+entity AES_128_Simple is
   port (
     clk         : in  std_logic;
     -- management
@@ -20,9 +20,9 @@ entity AES_128_Simple_002 is
     key         : in  std_logic_vector(127 downto 0);
     input       : in  std_logic_vector(127 downto 0);
     output      : out std_logic_vector(127 downto 0));
-end entity AES_128_Simple_002;
+end entity AES_128_Simple;
 ------------------------------------------------------------
-architecture arch of AES_128_Simple_002 is
+architecture arch of AES_128_Simple is
   signal initial_state : state_t := (others => (others => (others => '0')));
   signal aes_state     : state_t := (others => (others => (others => '0')));
   signal state_xor     : state_t := (others => (others => (others => '0')));
