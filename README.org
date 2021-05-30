@@ -1,7 +1,7 @@
 #+TITLE: AES in Hardware: N-Studies
 
 This is a series of studies of AES iplementations in VHDL.
-To build, I use =ghdl=. To view Generated waveforms, I use gtkwave.
+To build, I use =ghdl=. To view generated waveforms, I use gtkwave.
 
 For example, to build =001_AES_128_Simple=:
 #+begin_src bash
