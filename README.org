@@ -1,4 +1,25 @@
 #+TITLE: AES Study
 
-* TODO
-** Make it stand-alone
+* 001_AES_128_Simple
+A straightforward implementation to the AES-128 encryption.
+To start an encryption, the core expects that the signals =done= and =input_valid= equal to 1, and that the signals =key= and =input= are valid.
+
+The core needs 11 clock cycles to perform an AES-128 encryption and sets a valid =output= and asserts =done= for one clock cycle.
+Once =done= is asserted, the core is ready to start another encryption.
+
+
+#+begin_src vhdl
+entity AES_128_Simple is
+  port (
+    clk         : in  std_logic;
+    -- management
+    input_valid : in  std_logic;
+    done        : out std_logic;
+    -- data
+    key         : in  std_logic_vector(127 downto 0);
+    input       : in  std_logic_vector(127 downto 0);
+    output      : out std_logic_vector(127 downto 0));
+end entity AES_128_Simple;
+#+end_src
+
+
