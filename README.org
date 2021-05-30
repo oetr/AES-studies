@@ -1,4 +1,15 @@
-#+TITLE: AES Study
+#+TITLE: AES in Hardware: N-Studies
+
+This is a series of studies of AES iplementations in VHDL.
+To build, I use =ghdl=. To view Generated waveforms, I use gtkwave.
+
+For example, to build =001_AES_128_Simple=:
+#+begin_src bash
+cd 001_AES_128_Simple/
+make
+gtkwave sim/AES_TB.ghw
+#+end_src
+
 
 * 001_AES_128_Simple
 A straightforward implementation to the AES-128 encryption.
@@ -6,7 +17,6 @@ To start an encryption, the core expects that the signals =done= and =input_vali
 
 The core needs 11 clock cycles to perform an AES-128 encryption and sets a valid =output= and asserts =done= for one clock cycle.
 Once =done= is asserted, the core is ready to start another encryption.
-
 
 #+begin_src vhdl
 entity AES_128_Simple is
@@ -21,5 +31,3 @@ entity AES_128_Simple is
     output      : out std_logic_vector(127 downto 0));
 end entity AES_128_Simple;
 #+end_src
-
-

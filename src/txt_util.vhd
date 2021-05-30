@@ -1,3 +1,5 @@
+-- Original source by Stefan Doll taken from now defunct 
+-- http://www.stefanvhdl.com/ ages ago. Use the wayback machine to view.
 library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;
