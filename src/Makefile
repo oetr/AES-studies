@@ -9,7 +9,10 @@ all: mkdir_and_copy target_001
 
 mkdir_and_copy:
 	$(MKDIR_P) $(SIM_DIR)
-	cp *.vhd $(SIM_DIR)
+	cp AES_128_Simple_002.vhd $(SIM_DIR)
+	cp AESlib.vhd $(SIM_DIR)
+	cp txt_util.vhd $(SIM_DIR)
+	cp AES_TB.vhd $(SIM_DIR)
 	cp Makefile $(SIM_DIR) # copy this Makefile into the simulation directory
 
 target_001: $(TARGET_001).vhd

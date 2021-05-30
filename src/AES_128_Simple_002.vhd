@@ -17,9 +17,9 @@ entity AES_128_Simple_002 is
     input_valid : in  std_logic;
     done        : out std_logic;
     -- data
-    key         : in  key_t;
-    input       : in  block_t;
-    output      : out block_t);
+    key         : in  std_logic_vector(127 downto 0);
+    input       : in  std_logic_vector(127 downto 0);
+    output      : out std_logic_vector(127 downto 0));
 end entity AES_128_Simple_002;
 ------------------------------------------------------------
 architecture arch of AES_128_Simple_002 is
@@ -42,21 +42,6 @@ architecture arch of AES_128_Simple_002 is
 
   type fsm_t is (idle_s, busy_s, final_round_s);
   signal state : fsm_t := idle_s;
-
-  -- convert given block into state
-  function block2state (
-    signal block_in : block_t)
-    return state_t is
-
-    variable state_out : state_t;
-  begin
-
-    for i in 0 to 15 loop
-      state_out(integer(i / 4), i mod 4) := unsigned(block_in(127 - i*8 downto 127 - (i*8+7)));
-    end loop;
-
-    return state_out;
-  end function block2state;
 
 begin
 

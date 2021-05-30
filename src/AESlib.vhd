@@ -3,7 +3,7 @@
 ------------------------------------------------------------
 -- Author     : Peter Samarin <peter.samarin@gmail.com>
 ------------------------------------------------------------
--- Copyright (c) 2020 Peter Samarin
+-- Copyright (c) 2021 Peter Samarin
 ------------------------------------------------------------
 ------------------------------------------------------------
 library ieee;
@@ -52,6 +52,11 @@ package AESlib is
     signal state_in : state_t)
     return block_t;
 
+  ----------------------------------------------------------
+  function block2state (
+    signal block_in : block_t)
+    return state_t;
+    
   ----------------------------------------------------------
   function key2state (
     signal key_in : key_t)
@@ -124,6 +129,22 @@ package body AESlib is
     return block_out;
   end function state2block;
 
+
+  -- convert given block into state
+  function block2state (
+    signal block_in : block_t)
+    return state_t is
+
+    variable state_out : state_t;
+  begin
+
+    for i in 0 to 15 loop
+      state_out(integer(i / 4), i mod 4) := unsigned(block_in(127 - i*8 downto 127 - (i*8+7)));
+    end loop;
+
+    return state_out;
+  end function block2state;
+
   ----------------------------------------------------------
   function key2state (
     signal key_in : key_t)
@@ -162,21 +183,21 @@ package body AESlib is
     return state_t is
 
     variable state_out  : state_t;
-    variable column_in  : column_array_t;
-    variable column_out : column_array_t;
+    variable column_in  : column_t;
+    variable column_out : column_t;
   begin
 
     -- extract columns from state
     for col in 0 to 3 loop
       for row in 0 to 3 loop
-        column_in(col)(row) := state_in(row, col);
+        column_in(row) := state_in(row, col);
       end loop;
 
-      column_out(col) := mix_one_column(column_in(col));
+      column_out := mix_one_column(column_in);
 
       -- assemble the state from mixed columns
       for row in 0 to 3 loop
-        state_out(row, col) := column_out(col)(row);
+        state_out(row, col) := column_out(row);
       end loop;
     end loop;
 

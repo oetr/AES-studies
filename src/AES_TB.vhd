@@ -4,12 +4,11 @@
 -- File       : AES_TB
 -- Author     : Peter Samarin <peter.samarin@gmail.com>
 ------------------------------------------------------------
--- Copyright (c) 2020 Peter Samarin
+-- Copyright (c) 2021 Peter Samarin
 ------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.AESlib.all;
 
 use std.textio.all;
 use work.txt_util.all;
@@ -24,11 +23,11 @@ architecture Testbench of AES_TB is
   signal clk : std_logic := '1';
 
   -- DUV: I/O
-  signal input_valid : std_logic := '0';
-  signal done        : std_logic := '0';
-  signal key         : key_t     := (others => '0');
-  signal input       : block_t   := (others => '0');
-  signal output      : block_t   := (others => '0');
+  signal input_valid : std_logic                      := '0';
+  signal done        : std_logic                      := '0';
+  signal key         : std_logic_vector(127 downto 0) := (others => '0');
+  signal input       : std_logic_vector(127 downto 0) := (others => '0');
+  signal output      : std_logic_vector(127 downto 0) := (others => '0');
 
   -- random numbers
   shared variable seed1 : positive := 1000;
@@ -100,10 +99,10 @@ begin
         key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
       -- input <= X"d4e0b81e27bfb44111985d52aef1e530";
       else
-        input <= X"328831e0435a3137f6309807a88da234";
-        key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
-        --key   <= get_rand_bytes(16);
-        --input <= get_rand_bytes(16);
+        --input <= X"328831e0435a3137f6309807a88da234";
+        --key   <= X"2b28ab097eaef7cf15d2154f16a6883c";
+      key   <= get_rand_bytes(16);
+      input <= get_rand_bytes(16);
       end if;
       wait until rising_edge(clk);
       input_valid <= '0';
