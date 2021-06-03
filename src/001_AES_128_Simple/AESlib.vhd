@@ -56,7 +56,7 @@ package AESlib is
   function state2block (
     signal state_in : state_t)
     return block_t;
-    
+
   ----------------------------------------------------------
   function key2state (
     signal key_in : key_t)
@@ -127,7 +127,7 @@ package body AESlib is
 
     return state_out;
   end function block2state;
-  
+
 
   -- convert given state into block
   function state2block (
@@ -261,20 +261,16 @@ package body AESlib is
     variable key_out        : key_state_t;
   begin
     for col in 0 to 3 loop
-
       w0(col) := key(0, col);
       w1(col) := key(1, col);
       w2(col) := key(2, col);
       w3(col) := key(3, col);
-
     end loop;
 
     w4 := word_xor(key_scheduler_g(w3, rc_i), w0);
-
     w5 := word_xor(w4, w1);
     w6 := word_xor(w5, w2);
     w7 := word_xor(w6, w3);
-
 
     for col in 0 to 3 loop
       key_out(0, col) := w4(col);

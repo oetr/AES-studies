@@ -1,7 +1,6 @@
 #+TITLE: AES in Hardware: N-Studies
 
-This is a series of studies of AES iplementations in VHDL.
-The goal is to 
+This is a series of studies of AES implementations in VHDL.
 
 * License
 This work is licensed under AGPL.
@@ -47,8 +46,8 @@ To start an encryption, each core expects that the signals =done= and =input_val
 Once done, the core sets a valid =output= and asserts =done= for one clock cycle.
 Once =done= is asserted, the core is ready to start another encryption.
 
-* Short Core Description
-** 001_AES_128_Simple
+
+* 001_AES_128_Simple
 A straightforward implementation to the AES-128 encryption.
 This core needs 11 clock cycles to perform one AES-128 encryption.
 
