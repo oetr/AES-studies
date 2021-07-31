@@ -64,7 +64,7 @@ architecture Testbench of AES_TB is
 begin
 
   ---- Design Under Verification ---------------------------
-  DUV : entity work.AES_128_Simple
+  DUV : entity work.AES_128_Simple_Pipelined
     port map (
       clk         => clk,
       key         => key,

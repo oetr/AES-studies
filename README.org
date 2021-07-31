@@ -51,3 +51,6 @@ Once =done= is asserted, the core is ready to start another encryption.
 A straightforward implementation to the AES-128 encryption.
 This core needs 11 clock cycles to perform one AES-128 encryption.
 
+* 002_AES_128_Pipelined
+This is the pipelined version of the =001_AES_128_Simple= implementation.
+
